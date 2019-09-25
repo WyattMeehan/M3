@@ -5,7 +5,7 @@ public class Data {
 	private String date;
 	private String mac;
 	private String location;
-	
+	private String encodedMac;
 	
 	
 	//===================== Getters and Setters
@@ -27,6 +27,14 @@ public class Data {
 	}
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	public String getEncodedMac() {
+		return encodedMac;
+	}
+
+	public void setEncodedMac(String encodedMac) {
+		this.encodedMac = encodedMac;
 	}
 
 
