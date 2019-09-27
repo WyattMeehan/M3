@@ -51,16 +51,23 @@ public class RandomDataGenerator {
 		
 		for(int i = 0; i < data.size(); i++) {
 
+			
+
+			// extracts hex numbers value from address
+			String text[] = data.get(i).getMac().split(":");
+			byte plain[] = String.join("", text).getBytes();
+
+
 			// encrypts
-			byte[] text = data.get(i).getMac().getBytes();
-			byte[] cipher = DES.doFinal(text);
+			
+			byte[] cipher = DES.doFinal(plain);
 
 			// saves cipher text
 			data.get(i).setEncodedMac(Base64.getEncoder().encodeToString(cipher));
 
 			
 			write.writeBytes(data.get(i).getDate() + "\t" + data.get(i).getEncodedMac() + "\t" +
-			data.get(i).getLocation() + "\n");
+			data.get(i).getLocation() + "\r\n");
 		}
 
 		write.close();
