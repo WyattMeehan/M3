@@ -56,7 +56,7 @@ public class RandomDataGenerator {
 			// extracts hex numbers value from address
 			String text[] = data.get(i).getMac().split(":");
 			byte plain[] = String.join("", text).getBytes();
-
+			
 
 			// encrypts
 			
