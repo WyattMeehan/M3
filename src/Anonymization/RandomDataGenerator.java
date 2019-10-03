@@ -42,6 +42,7 @@ public class RandomDataGenerator {
 		return data;
 	}
 
+
 	// encrypts MAC addresses and prints them with other information to a text file
 	public static void encrypts(ArrayList<Data> data) throws NoSuchAlgorithmException, NoSuchPaddingException,
 			InvalidKeyException, IllegalBlockSizeException, BadPaddingException, IOException {
