@@ -46,22 +46,18 @@ public class Analysis {
         // initiates connection
         HttpURLConnection connect = (HttpURLConnection)api.openConnection();
 
-        // sets header
-        connect.setRequestProperty("User-Agent", "Mozilla/5.0");
-
         // gets response code
         int code = connect.getResponseCode();
         result[0] = "" + code;
 
         // gets response
         BufferedReader in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-		while ((inputLine = in.readLine()) != null) {
-			response.append(inputLine);
-        }
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+        while ((inputLine = in.readLine()) != null)
+            response.append(inputLine);
         result[1] = response.toString();
-		in.close();
+        in.close();
 
         return result;
     }
