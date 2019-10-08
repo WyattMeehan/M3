@@ -1,12 +1,12 @@
 package DataAnalysis;
 
-import java.io.FileNotFoundException;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import Anonymization.*;
 
 public class Analysis {
@@ -16,12 +16,12 @@ public class Analysis {
     static RandomAccessFile localFile, globalFile;
 
     // saves the data to file
-    public static void save(Data data, RandomAccessFile write) throws IOException { 
-			write.writeBytes(data.getDate() + "\t" + data.getMac() + "\t" + data.getLocation() + "\r\n");
+    public static void save(Data data, RandomAccessFile write) throws IOException {
+        write.writeBytes(data.getDate() + "\t" + data.getMac() + "\t" + data.getLocation() + "\r\n");
     }
 
     // checks if a hex number has second least significant bit is 1
-    public static boolean checkBit(char hex){
+    public static boolean checkBit(char hex) {
         if (hex == '2' || hex == '3')
             return true;
         if (hex == '6' || hex == '7')
@@ -31,6 +31,39 @@ public class Analysis {
         if (hex == 'e' || hex == 'f')
             return true;
         return false;
+    }
+
+    // looks up vendor
+    // returns response code + content
+    public static String[] lookup(String MAC) throws IOException {
+
+        String result[] = new String[2];
+
+        // sets url
+        String url = "https://mac2vendor.com/api/v4/mac/" + MAC;
+        URL api = new URL(url);
+
+        // initiates connection
+        HttpURLConnection connect = (HttpURLConnection)api.openConnection();
+
+        // sets header
+        connect.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+        // gets response code
+        int code = connect.getResponseCode();
+        result[0] = "" + code;
+
+        // gets response
+        BufferedReader in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+        }
+        result[1] = response.toString();
+		in.close();
+
+        return result;
     }
 
     // seperates globally unique MAC addresses and locally randomized MAC addresses
