@@ -17,7 +17,12 @@ public class Analysis {
 
     // saves the data to file
     public static void save(Data data, RandomAccessFile write) throws IOException {
-        write.writeBytes(data.getDate() + "\t" + data.getMac() + "\t" + data.getLocation() + "\r\n");
+
+        // interprets MAC addresses
+        String MAC = data.getMac();
+        String response[] = lookup(MAC);
+
+        write.writeBytes(data.getDate() + "\t" + MAC + "\t" + data.getLocation() + "\t" + getVendor(response[1]) + "\r\n");
     }
 
     // checks if a hex number has second least significant bit is 1
@@ -67,7 +72,7 @@ public class Analysis {
     public static String getVendor(String response){
 
         // trims the response then gets the vendor name using location in response
-        return response.trim().substring(response.indexOf("vendor") + 10, response.indexOf("mac") - 15);
+        return response.substring(response.indexOf("vendor") + 10, response.indexOf("mac") - 15);
 
         // NOTE: LAA means Locally Administered Addresses
 
