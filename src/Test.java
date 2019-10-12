@@ -6,9 +6,11 @@ import DataAnalysis.*;
 public class Test {
 
     public static void main(String[] args) throws IOException {
-        String result[] = Analysis.lookup("FC:FB:FB:01:FA:21");
-        System.out.println(result[0]);
+        String result[] = Analysis.lookup("de:0d:90:53:4e:2c");
+        String vendor = Analysis.getVendor(result[1]);
         System.out.println(result[1]);
+        System.out.println(vendor.trim());
+        System.out.println(vendor.length());
     }
     
 }

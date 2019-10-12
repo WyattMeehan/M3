@@ -45,6 +45,7 @@ public class Analysis {
 
         // initiates connection
         HttpURLConnection connect = (HttpURLConnection)api.openConnection();
+        connect.addRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
 
         // gets response code
         int code = connect.getResponseCode();
@@ -60,6 +61,16 @@ public class Analysis {
         in.close();
 
         return result;
+    }
+
+    // gets vendor name from API response
+    public static String getVendor(String response){
+
+        // trims the response then gets the vendor name using location in response
+        return response.trim().substring(response.indexOf("vendor") + 10, response.indexOf("mac") - 15);
+
+        // NOTE: LAA means Locally Administered Addresses
+
     }
 
     // seperates globally unique MAC addresses and locally randomized MAC addresses
