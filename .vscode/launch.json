@@ -1,27 +1,17 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
     "configurations": [
         {
             "type": "java",
-            "name": "Debug (Launch) - Current File",
+            "name": "CodeLens (Launch) - Test",
             "request": "launch",
-            "mainClass": "${file}"
-        },
-        {
-            "type": "java",
-            "name": "Debug (Launch)-RandomDataGenerator<M3>",
-            "request": "launch",
-            "mainClass": "RandomDataGenerator",
+            "mainClass": "Test",
             "projectName": "M3"
         },
         {
             "type": "java",
-            "name": "Debug (Launch)-Test<M3>",
+            "name": "CodeLens (Launch) - Reader",
             "request": "launch",
-            "mainClass": "Test",
+            "mainClass": "Read.Reader",
             "projectName": "M3"
         }
     ]
