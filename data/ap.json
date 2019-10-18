@@ -1,0 +1,230 @@
+[
+    {
+        "apMacAddress": "74:a2:e6:cf:3e:50",
+        "associated": true,
+        "band": "IEEE_802_11_A",
+        "bleTagInfo": null,
+        "confidenceFactor": 48,
+        "deviceId": "dc:ef:ca:4f:e2:83",
+        "entity": "WIRELESS_CLIENTS",
+        "eventId": 1662202,
+        "floorId": "721421391807114850",
+        "geoCoordinate": {
+            "latitude": -999,
+            "longitude": -999,
+            "unit": "DEGREES"
+        },
+        "hierarchyDetails": {
+            "building": {
+                "id": "721421391806595140",
+                "name": "Benton Hall"
+            },
+            "campus": {
+                "id": "721421391806595114",
+                "name": "Oxford"
+            },
+            "campusParents": null,
+            "floor": {
+                "id": "721421391807114850",
+                "name": "2nd Floor"
+            },
+            "zones": null
+        },
+        "ipAddress": [
+            "172.25.53.154"
+        ],
+        "lastSeen": "2019-10-17T12:38:01.140-0400",
+        "locComputeType": "RSSI",
+        "locationCoordinate": {
+            "unit": "FEET",
+            "x": 117.17441,
+            "y": 44.607334,
+            "z": 0
+        },
+        "locationMapHierarchy": "Oxford>Benton Hall>2nd Floor",
+        "macAddress": "dc:ef:ca:4f:e2:83",
+        "manufacturer": "Murata Manufacturing Co., Ltd.",
+        "maxDetectedRssi": {
+            "antennaIndex": 1,
+            "apMacAddress": "74:a2:e6:d8:84:50",
+            "band": "IEEE_802_11_B",
+            "lastHeardInSeconds": 4,
+            "rssi": -61,
+            "slot": 0
+        },
+        "notificationTime": "1571330281157",
+        "notificationType": "locationupdate",
+        "rawLocation": {
+            "rawX": -999,
+            "rawY": -999,
+            "unit": "FEET"
+        },
+        "rssiEntries": [
+            {
+                "antennaIndex": 1,
+                "apMacAddress": "74:a2:e6:d8:84:50",
+                "band": "IEEE_802_11_B",
+                "lastHeardSecs": 4,
+                "rssi": -61,
+                "slot": 0
+            },
+            {
+                "antennaIndex": 0,
+                "apMacAddress": "74:a2:e6:d8:84:50",
+                "band": "IEEE_802_11_B",
+                "lastHeardSecs": 4,
+                "rssi": -61,
+                "slot": 0
+            },
+            {
+                "antennaIndex": 1,
+                "apMacAddress": "74:a2:e6:f4:66:f0",
+                "band": "IEEE_802_11_B",
+                "lastHeardSecs": 3,
+                "rssi": -64,
+                "slot": 0
+            },
+            {
+                "antennaIndex": 1,
+                "apMacAddress": "74:a2:e6:f4:66:f0",
+                "band": "IEEE_802_11_A",
+                "lastHeardSecs": 4,
+                "rssi": -64,
+                "slot": 1
+            },
+            {
+                "antennaIndex": 0,
+                "apMacAddress": "74:a2:e6:f4:66:f0",
+                "band": "IEEE_802_11_A",
+                "lastHeardSecs": 4,
+                "rssi": -68,
+                "slot": 1
+            },
+            {
+                "antennaIndex": 0,
+                "apMacAddress": "74:a2:e6:f4:66:f0",
+                "band": "IEEE_802_11_B",
+                "lastHeardSecs": 3,
+                "rssi": -72,
+                "slot": 0
+            },
+            {
+                "antennaIndex": 1,
+                "apMacAddress": "74:a2:e6:7d:cb:a0",
+                "band": "IEEE_802_11_A",
+                "lastHeardSecs": 4,
+                "rssi": -76,
+                "slot": 1
+            },
+            {
+                "antennaIndex": 0,
+                "apMacAddress": "74:a2:e6:7d:cb:a0",
+                "band": "IEEE_802_11_A",
+                "lastHeardSecs": 4,
+                "rssi": -81,
+                "slot": 1
+            },
+            {
+                "antennaIndex": 0,
+                "apMacAddress": "b0:aa:77:cc:f0:a0",
+                "band": "IEEE_802_11_B",
+                "lastHeardSecs": 4,
+                "rssi": -82,
+                "slot": 0
+            }
+        ],
+        "sourceNotification": "127.0.0.1",
+        "sourceNotificationKey": "127.0.0.1,1",
+        "ssid": "MU-WIRELESS",
+        "subscriptionName": "CMX_Api_Server_Notification_1",
+        "tagVendorData": null,
+        "timestamp": 1571330281140,
+        "username": "hatajm"
+    },
+    {
+        "apMacAddress": "74:a2:e6:f4:66:f0",
+        "associated": true,
+        "band": "IEEE_802_11_A",
+        "bleTagInfo": null,
+        "confidenceFactor": 80,
+        "deviceId": "a0:88:69:9e:cc:6c",
+        "entity": "WIRELESS_CLIENTS",
+        "eventId": 1661295,
+        "floorId": "721421391807114849",
+        "geoCoordinate": {
+            "latitude": -999,
+            "longitude": -999,
+            "unit": "DEGREES"
+        },
+        "hierarchyDetails": {
+            "building": {
+                "id": "721421391806595140",
+                "name": "Benton Hall"
+            },
+            "campus": {
+                "id": "721421391806595114",
+                "name": "Oxford"
+            },
+            "campusParents": null,
+            "floor": {
+                "id": "721421391807114849",
+                "name": "1st Floor"
+            },
+            "zones": null
+        },
+        "ipAddress": [
+            "172.25.55.76"
+        ],
+        "lastSeen": "2019-10-17T12:37:30.424-0400",
+        "locComputeType": "RSSI",
+        "locationCoordinate": {
+            "unit": "FEET",
+            "x": 130.32336,
+            "y": 35.211792,
+            "z": 0
+        },
+        "locationMapHierarchy": "Oxford>Benton Hall>1st Floor",
+        "macAddress": "a0:88:69:9e:cc:6c",
+        "manufacturer": "Intel Corporate",
+        "maxDetectedRssi": {
+            "antennaIndex": 0,
+            "apMacAddress": "b0:aa:77:9f:34:f0",
+            "band": "IEEE_802_11_A",
+            "lastHeardInSeconds": 3,
+            "rssi": -77,
+            "slot": 1
+        },
+        "notificationTime": "1571330250439",
+        "notificationType": "locationupdate",
+        "rawLocation": {
+            "rawX": -999,
+            "rawY": -999,
+            "unit": "FEET"
+        },
+        "rssiEntries": [
+            {
+                "antennaIndex": 0,
+                "apMacAddress": "b0:aa:77:9f:34:f0",
+                "band": "IEEE_802_11_A",
+                "lastHeardSecs": 3,
+                "rssi": -77,
+                "slot": 1
+            },
+            {
+                "antennaIndex": 1,
+                "apMacAddress": "b0:aa:77:9f:34:f0",
+                "band": "IEEE_802_11_A",
+                "lastHeardSecs": 3,
+                "rssi": -78,
+                "slot": 1
+            }
+        ],
+        "sourceNotification": "127.0.0.1",
+        "sourceNotificationKey": "127.0.0.1,3",
+        "ssid": "MU-WIRELESS",
+        "subscriptionName": "CMX_Api_Server_Notification_1",
+        "tagVendorData": null,
+        "timestamp": 1571330250424,
+        "username": "hatajm"
+    }
+]
