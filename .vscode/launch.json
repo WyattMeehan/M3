@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Extract",
+            "request": "launch",
+            "mainClass": "Extraction.Extract",
+            "projectName": "M3"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - Analysis",
             "request": "launch",
             "mainClass": "DataAnalysis.Analysis",
