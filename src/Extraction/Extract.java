@@ -40,8 +40,8 @@ public class Extract {
         }
     }
 
-    public static void main(String[] args) {
-        scp("172.25.53.105");
-    }
+    //public static void main(String[] args) {
+        //scp("172.25.53.105");
+    //}
     
 }

@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - APExtract",
+            "request": "launch",
+            "mainClass": "Extraction.APExtract",
+            "projectName": "M3"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - Extract",
             "request": "launch",
             "mainClass": "Extraction.Extract",
