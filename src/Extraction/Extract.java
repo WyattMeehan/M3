@@ -1,4 +1,5 @@
 // Extracts data from pis
+// doesn't work
 package Extraction;
 
 import com.jcraft.jsch.Channel;
@@ -15,7 +16,7 @@ public class Extract {
         try{
 
             // file name
-            String file = "m3Scans.log";
+            String file = "~/Desktop/M3-Project/scans/m3Scans.log";
             file = file.replace("'", "'\"'\"'");
             file = "'" +  file + "'";
 
