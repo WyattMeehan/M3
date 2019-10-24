@@ -52,7 +52,7 @@ public class APExtract {
 
             // writes to file whose name is current date
             // specifies path
-            BufferedWriter writer = new BufferedWriter(new FileWriter("C:/Users/haanp/Documents/Capstone/AP/" + format.format(new Date()) + ".txt", true));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("data/AP/" + format.format(new Date()) + ".txt", true));
 
             for (String id : ids){
                 String response[] = get(id);

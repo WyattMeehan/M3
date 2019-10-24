@@ -2,14 +2,9 @@
 // doesn't work
 package Extraction;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.UserInfo;
-
 public class Extract {
 
+    /*
     // copy data
     public static void scp(String ip){
 
@@ -39,9 +34,12 @@ public class Extract {
             System.out.println(e);
         }
     }
+    */
 
-    //public static void main(String[] args) {
-        //scp("172.25.53.105");
-    //}
+    
+
+    public static void main(String[] args) {
+        
+    }
     
 }

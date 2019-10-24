@@ -48,7 +48,7 @@ public class RandomDataGenerator {
 			InvalidKeyException, IllegalBlockSizeException, BadPaddingException, IOException {
 
 		// result file
-		RandomAccessFile write = new RandomAccessFile("result.txt", "rw");
+		RandomAccessFile write = new RandomAccessFile("data/result.txt", "rw");
 
 		// generates key
 		String key = "JcJ6v50mI38=";
@@ -81,7 +81,7 @@ public class RandomDataGenerator {
 	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
 			IllegalBlockSizeException, BadPaddingException, IOException {
 
-		ArrayList<Data> data = readFile("data.txt");
+		ArrayList<Data> data = readFile("data/data.txt");
 		encrypts(data);
 
 	}

@@ -100,16 +100,16 @@ public class Analysis {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
 
         // loads hash table
-        FileInputStream fis = new FileInputStream("oui.tmp");
+        FileInputStream fis = new FileInputStream("data/oui.tmp");
         ObjectInputStream ois = new ObjectInputStream(fis);
         table = (Hashtable<String, String>) ois.readObject();
 
         // output files
-        localFile = new RandomAccessFile("local.txt", "rw");
-        globalFile = new RandomAccessFile("global.txt", "rw");
+        localFile = new RandomAccessFile("data/local.txt", "rw");
+        globalFile = new RandomAccessFile("data/global.txt", "rw");
         
         // reads file
-        ArrayList<Data> data = RandomDataGenerator.readFile("data.txt");
+        ArrayList<Data> data = RandomDataGenerator.readFile("data/data.txt");
 
         for (Data d : data)
             save(d);

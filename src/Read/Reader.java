@@ -14,7 +14,7 @@ public class Reader {
 
         // reads from file
         // original file was modified to contain only the lines with oui and vendor
-        RandomAccessFile oui = new RandomAccessFile("shorten_oui.txt", "r");
+        RandomAccessFile oui = new RandomAccessFile("data/shorten_oui.txt", "r");
 
         // runs through every lines
         while (oui.getFilePointer() < oui.length()){
@@ -33,7 +33,7 @@ public class Reader {
         }
         
         // saves hash table
-        FileOutputStream fos = new FileOutputStream("oui.tmp");
+        FileOutputStream fos = new FileOutputStream("data/oui.tmp");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(ouiVendor);
         oos.close();
