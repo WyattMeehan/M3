@@ -1,10 +1,14 @@
 package Extraction;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class APExtract {
 
@@ -37,8 +41,27 @@ public class APExtract {
     }
 
     public static void main(String[] args) throws IOException {
-        String result[] = get("lean2");
-        System.out.println(result[0]);
-        System.out.println(result[1]);
+
+        // ids
+        String ids[] = {"lean2", "purayia2", "hatajm", "raychov", "kraftjk", "mohamem", "campbest"};
+
+        // date format
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+
+        while (true){
+
+            // writes to file whose name is current date
+            // specifies path
+            BufferedWriter writer = new BufferedWriter(new FileWriter("E:/Docs/M3/AP/" + format.format(new Date()) + ".txt", true));
+
+            for (String id : ids){
+                String response[] = get(id);
+                writer.write(response[1]);
+                writer.newLine();
+            }
+            writer.close();
+        }
+        
+
     }
 }
