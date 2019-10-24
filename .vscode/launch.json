@@ -4,6 +4,13 @@
             "type": "java",
             "name": "CodeLens (Launch) - APExtract",
             "request": "launch",
+            "mainClass": "AP.APExtract",
+            "projectName": "M3"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - APExtract",
+            "request": "launch",
             "mainClass": "Extraction.APExtract",
             "projectName": "M3"
         },

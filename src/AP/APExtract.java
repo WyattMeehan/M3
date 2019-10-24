@@ -1,4 +1,4 @@
-package Extraction;
+package AP;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -52,12 +52,15 @@ public class APExtract {
 
             // writes to file whose name is current date
             // specifies path
-            BufferedWriter writer = new BufferedWriter(new FileWriter("E:/Docs/M3/AP/" + format.format(new Date()) + ".txt", true));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("C:/Users/haanp/Documents/Capstone/AP/" + format.format(new Date()) + ".txt", true));
 
             for (String id : ids){
                 String response[] = get(id);
-                writer.write(response[1]);
-                writer.newLine();
+                if (response[1].length() > 2){
+                    writer.write(response[1]);
+                    writer.newLine();
+                    writer.newLine();
+                }
             }
             writer.close();
         }
