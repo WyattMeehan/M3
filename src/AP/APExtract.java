@@ -1,5 +1,3 @@
-package AP;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -9,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class APExtract {
 
@@ -40,7 +39,7 @@ public class APExtract {
         return result;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
         // ids
         String ids[] = {"lean2", "purayia2", "hatajm", "raychov", "kraftjk", "mohamem", "campbest"};
@@ -52,7 +51,7 @@ public class APExtract {
 
             // writes to file whose name is current date
             // specifies path
-            BufferedWriter writer = new BufferedWriter(new FileWriter("data/AP/" + format.format(new Date()) + ".txt", true));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("data/" + format.format(new Date()) + ".txt", true));
 
             for (String id : ids){
                 String response[] = get(id);
@@ -63,6 +62,7 @@ public class APExtract {
                 }
             }
             writer.close();
+            TimeUnit.SECONDS.sleep(10);
         }
         
 
