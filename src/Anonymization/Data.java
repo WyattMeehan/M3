@@ -6,9 +6,28 @@ public class Data {
 	private String mac;
 	private String location;
 	private String encodedMac;
+	private int[] signal;
 	
+	public Data(String date, String mac){
+		this.date = date;
+		this.mac = mac;
+		this.signal = new int[5];
+	}
+
+	public Data(){
+		
+	}
 	
 	//===================== Getters and Setters
+
+	// sets signal for specific pi
+	public void setSignal(int signal, int pi){
+		this.signal[pi] = signal;
+	}
+
+	public int[] getSignal(){
+		return signal;
+	}
 	
 	public String getDate() {
 		return date;
@@ -37,5 +56,12 @@ public class Data {
 		this.encodedMac = encodedMac;
 	}
 
+	// displays request with signal from all pis
+	public String toString(){
+		String strength = "";
+		for (int i : signal)
+			strength = strength + "\t" + i;
+		return date + "\t" + mac + strength;
+	}
 
 }
