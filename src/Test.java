@@ -14,7 +14,7 @@ public class Test {
     public static void main(String[] args) throws IOException, ParseException {
 
         // gets response
-        URL url = new URL("http://csebu.csi.miamioh.edu/cmx/v1/AABFG/activeCount/Oxford%3EBenton%20Hall%3E2nd%20Floor");
+        URL url = new URL("http://csebu.csi.miamioh.edu/cmx/v1/AABFG/activeCount/Oxford%3EBenton%20Hall%3EBasement");
         HttpURLConnection connect = (HttpURLConnection)url.openConnection();
         connect.addRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
         BufferedReader in = new BufferedReader(new InputStreamReader(connect.getInputStream())); 
@@ -33,11 +33,12 @@ public class Test {
         
         int index = 0;
         int count = 0;
-        int range = 15;
+        int range = 60;
 
         // finds all "lastSeen" in response
         while (result.indexOf("lastSeen", index + 1) > 0){
             index = result.indexOf("lastSeen", index + 1);
+            int vendor = result.indexOf("apMacAddress", index);
 
             // finds date data
             String date = result.substring(index + 11, index + 30).replace("T", " ");
@@ -50,13 +51,13 @@ public class Test {
 
                 if (time - ms < 1000 * range){
                     count++;
-                    System.out.println(date);
+                    System.out.println(result.substring(vendor + 15, result.indexOf("\"", vendor + 15)));
                 }
             }
             
         }
 
-        System.out.println("\n\n" + count + "people in " + range + " s");
+        System.out.println("\n\n" + count + " people in " + range + " s");
     }
     
 }
