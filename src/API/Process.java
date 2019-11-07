@@ -1,3 +1,5 @@
+package API;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,7 +13,7 @@ import org.json.JSONObject;
 
 // package for testing
 
-public class Test {
+public class Process {
 
     public static void main(String[] args) throws IOException, ParseException {
 

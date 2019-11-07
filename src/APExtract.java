@@ -1,3 +1,5 @@
+//
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -16,7 +18,6 @@ public class APExtract {
         String result[] = new String[2];
 
         // sets url
-        String url = "http://csebu.csi.miamioh.edu/cmx/v1/FFEERE/location/user/" + id + "/";
         URL api = new URL(id);
 
         // initiates connection
@@ -51,10 +52,11 @@ public class APExtract {
 
             // writes to file whose name is current date
             // specifies path
-            BufferedWriter writer = new BufferedWriter(new FileWriter("our/" + format.format(new Date()) + ".txt", true));
+            BufferedWriter writer = new BufferedWriter(new FileWriter("data/AP/our/" + format.format(new Date()) + ".txt", true));
 
             for (String id : ids){
-                String response[] = get(id);
+                String url = "http://csebu.csi.miamioh.edu/cmx/v1/FFEERE/location/user/" + id + "/";
+                String response[] = get(url);
                 if (response[1].length() > 2){
                     writer.write(response[1]);
                     writer.newLine();
