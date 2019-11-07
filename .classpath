@@ -2,7 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="lib"/>
+	<classpathentry kind="lib" path="lib"/>
 	<classpathentry kind="output" path="bin"/>
 	<classpathentry exported="true" kind="lib" path="lib/jsch-0.1.55.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/json-20190722.jar"/>
 </classpath>

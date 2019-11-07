@@ -7,6 +7,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 // package for testing
 
 public class Test {
@@ -22,38 +25,52 @@ public class Test {
         StringBuffer response = new StringBuffer(); 
         while ((inputLine = in.readLine()) != null)
             response.append(inputLine); 
-        String result = response.toString(); 
         in.close();
+        String result = response.toString();
 
+        // Processes as JSon object
+        JSONArray list = new JSONArray(result);
+  
         // current time
         long time = System.currentTimeMillis();
 
         // date formatter
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         
-        int index = 0;
         int count = 0;
         int range = 60;
 
-        // finds all "lastSeen" in response
-        while (result.indexOf("lastSeen", index + 1) > 0){
-            index = result.indexOf("lastSeen", index + 1);
-            int vendor = result.indexOf("apMacAddress", index);
-
+        // goes through all devices
+        for (int i = 0; i < list.length(); i++){
+            JSONObject object = list.getJSONObject(i);
+            
             // finds date data
-            String date = result.substring(index + 11, index + 30).replace("T", " ");
+            String date = object.getString("lastSeen").substring(0, 19).replace("T", " ");
 
-            if (date.charAt(0) == '2'){
-
-                // converts date to ms
-                Date d = format.parse(date);
-                long ms = d.getTime();
-
-                if (time - ms < 1000 * range){
-                    count++;
-                    System.out.println(result.substring(vendor + 15, result.indexOf("\"", vendor + 15)));
-                }
+            // finds vendor data
+            // sometimes shown as NOT APPLICABLE
+            String vendor;
+            try{
+                vendor = object.getString("manufacturer");
             }
+            catch (Exception e){
+                vendor = "N/A";
+            }
+            
+
+            // AP address
+            JSONObject maxRSSI = object.getJSONObject("maxDetectedRssi");
+            String address = maxRSSI.getString("apMacAddress");
+
+            // converts date to ms
+            Date d = format.parse(date);
+            long ms = d.getTime();
+
+            if (time - ms < 1000 * range){
+                count++;
+                System.out.println(date + "\t" + address + "\t" + vendor);
+            }
+            
             
         }
 
