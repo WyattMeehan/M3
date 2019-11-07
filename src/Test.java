@@ -6,7 +6,6 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -28,7 +27,7 @@ public class Test {
         in.close();
         String result = response.toString();
 
-        // Processes as JSon object
+        // Processes as a JSon list
         JSONArray list = new JSONArray(result);
   
         // current time
@@ -37,7 +36,10 @@ public class Test {
         // date formatter
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         
+        // people count
         int count = 0;
+
+        // time range in sec
         int range = 60;
 
         // goes through all devices
@@ -54,10 +56,9 @@ public class Test {
                 vendor = object.getString("manufacturer");
             }
             catch (Exception e){
-                vendor = "N/A";
+                vendor = "NOT APPLICALE";
             }
             
-
             // AP address
             JSONObject maxRSSI = object.getJSONObject("maxDetectedRssi");
             String address = maxRSSI.getString("apMacAddress");
@@ -66,15 +67,15 @@ public class Test {
             Date d = format.parse(date);
             long ms = d.getTime();
 
+            // filters only devices in given time range
+            // prints result
             if (time - ms < 1000 * range){
                 count++;
                 System.out.println(date + "\t" + address + "\t" + vendor);
-            }
-            
-            
-        }
+            }   
 
-        System.out.println("\n\n" + count + " people in " + range + " s");
+        }
+        System.out.println("\n" + count + " people in " + range + " s");
     }
     
 }
