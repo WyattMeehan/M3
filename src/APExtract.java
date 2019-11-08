@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -45,6 +46,12 @@ public class APExtract {
         // ids
         String ids[] = {"lean2", "purayia2", "hatajm", "raychov", "kraftjk", "mohamem", "campbest"};
 
+        // API addresses
+        ArrayList<String> addresses = new ArrayList<String>();
+
+        for (String id : ids)
+            addresses.add("http://csebu.csi.miamioh.edu/cmx/v1/FFEERE/location/user/" + id + "/");
+
         // date format
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 
@@ -54,9 +61,8 @@ public class APExtract {
             // specifies path
             BufferedWriter writer = new BufferedWriter(new FileWriter("data/AP/our/" + format.format(new Date()) + ".txt", true));
 
-            for (String id : ids){
-                String url = "http://csebu.csi.miamioh.edu/cmx/v1/FFEERE/location/user/" + id + "/";
-                String response[] = get(url);
+            for (String address : addresses){
+                String response[] = get(address);
                 if (response[1].length() > 2){
                     writer.write(response[1]);
                     writer.newLine();
