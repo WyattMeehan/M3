@@ -41,6 +41,23 @@ public class APExtract {
         return result;
     }
 
+    // writes to file whose name is current date
+    public static void write(String address, String path) throws IOException {
+
+        // date format
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(path + format.format(new Date()) + ".txt", true)); 
+        String response[] = get(address);
+        if (response[1].length() > 2){
+            writer.write(response[1]);
+            writer.newLine();
+            writer.newLine();
+        }
+        
+        writer.close();
+    }
+
     public static void main(String[] args) throws IOException, InterruptedException {
 
         // ids
@@ -52,25 +69,60 @@ public class APExtract {
         for (String id : ids)
             addresses.add("http://csebu.csi.miamioh.edu/cmx/v1/FFEERE/location/user/" + id + "/");
 
-        // date format
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        // second API
+        String API2 = "http://csebu.csi.miamioh.edu/cmx/v1/AABFG/activeCount/Oxford%3E";
+
+        // buildings (Benton, Engineering Building, King)
+        String[] buildings = {"Benton%20Hall%3E", "Engineering%20Building%3E", "King%20Library3E"};
+
+        // Benton
+        // 0: basement
+        // 1: 1st floor
+        // 2: 2nd floor
+        String[] Benton = new String[3];
+        Benton[0] = API2 + buildings[0] + "Basement/";
+        Benton[1] = API2 + buildings[0] + "1st%20Floor/";
+        Benton[2] = API2 + buildings[0] + "2nd%20Floor/";
+
+        // Engineering Building
+        // 0: basement
+        // 1: 1st floor
+        // 2: 2nd floor
+        String[] Engineering = new String[3];
+        Engineering[0] = API2 + buildings[1] + "Basement/";
+        Engineering[1] = API2 + buildings[1] + "1st%20Floor/";
+        Engineering[2] = API2 + buildings[0] + "2nd%20Floor/";
+
+        // King
+        // 0: ground floor
+        // 1: 1st floor
+        // 2: 2nd floor
+        // 3: 3rd floor
+        String[] King = new String[4];
+        King[0] = API2 + buildings[2] + "King%20Library%20Ground%20Floor/";
+        King[1] = API2 + buildings[2] + "King%20Library%201st%20Floor/";
+        King[2] = API2 + buildings[2] + "King%20Library%202nd%20Floor/";
+        King[3] = API2 + buildings[2] + "King%20Library%203rd%20Floor/";
+
+        
 
         while (true){
 
-            // writes to file whose name is current date
-            // specifies path
-            BufferedWriter writer = new BufferedWriter(new FileWriter("data/AP/our/" + format.format(new Date()) + ".txt", true));
+            // specifies paths
 
             for (String address : addresses){
-                String response[] = get(address);
-                if (response[1].length() > 2){
-                    writer.write(response[1]);
-                    writer.newLine();
-                    writer.newLine();
-                }
+                write(address, "data/AP/our/");
             }
-            writer.close();
-            TimeUnit.SECONDS.sleep(10);
+
+            String path = "data/AP/";
+
+            for (int i = 0; i < 4; i++){
+                write(Benton[i], path + "Benton/" + i + "/");
+                write(Engineering[i], path + "Engineering/" + i + "/");
+                write(King[i], path + "King" + i +"/");
+            }
+
+            TimeUnit.SECONDS.sleep(20);
         }
         
 
