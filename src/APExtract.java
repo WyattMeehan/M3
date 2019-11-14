@@ -1,4 +1,4 @@
-//
+// stores data from the AP
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -63,9 +63,8 @@ public class APExtract {
         // ids
         String ids[] = {"lean2", "purayia2", "hatajm", "raychov", "kraftjk", "mohamem", "campbest"};
 
-        // API addresses
+        // API addresses for ids
         ArrayList<String> addresses = new ArrayList<String>();
-
         for (String id : ids)
             addresses.add("http://csebu.csi.miamioh.edu/cmx/v1/FFEERE/location/user/" + id + "/");
 
@@ -80,18 +79,18 @@ public class APExtract {
         // 1: 1st floor
         // 2: 2nd floor
         String[] Benton = new String[3];
-        Benton[0] = API2 + buildings[0] + "Basement/";
-        Benton[1] = API2 + buildings[0] + "1st%20Floor/";
-        Benton[2] = API2 + buildings[0] + "2nd%20Floor/";
+        Benton[0] = API2 + buildings[0] + "Basement";
+        Benton[1] = API2 + buildings[0] + "1st%20Floor";
+        Benton[2] = API2 + buildings[0] + "2nd%20Floor";
 
         // Engineering Building
         // 0: basement
         // 1: 1st floor
         // 2: 2nd floor
         String[] Engineering = new String[3];
-        Engineering[0] = API2 + buildings[1] + "Basement/";
-        Engineering[1] = API2 + buildings[1] + "1st%20Floor/";
-        Engineering[2] = API2 + buildings[0] + "2nd%20Floor/";
+        Engineering[0] = API2 + buildings[1] + "Basement";
+        Engineering[1] = API2 + buildings[1] + "1st%20Floor";
+        Engineering[2] = API2 + buildings[0] + "2nd%20Floor";
 
         // King
         // 0: ground floor
@@ -99,30 +98,32 @@ public class APExtract {
         // 2: 2nd floor
         // 3: 3rd floor
         String[] King = new String[4];
-        King[0] = API2 + buildings[2] + "King%20Library%20Ground%20Floor/";
-        King[1] = API2 + buildings[2] + "King%20Library%201st%20Floor/";
-        King[2] = API2 + buildings[2] + "King%20Library%202nd%20Floor/";
-        King[3] = API2 + buildings[2] + "King%20Library%203rd%20Floor/";
-
-        
+        King[0] = API2 + buildings[2] + "King%20Library%20Ground%20Floor";
+        King[1] = API2 + buildings[2] + "King%20Library%201st%20Floor";
+        King[2] = API2 + buildings[2] + "King%20Library%202nd%20Floor";
+        King[3] = API2 + buildings[2] + "King%20Library%203rd%20Floor";
 
         while (true){
 
-            // specifies paths
-
-            for (String address : addresses){
-                write(address, "data/AP/our/");
-            }
-
+            // path to store data
             String path = "data/AP/";
 
-            for (int i = 0; i < 4; i++){
-                write(Benton[i], path + "Benton/" + i + "/");
-                write(Engineering[i], path + "Engineering/" + i + "/");
-                write(King[i], path + "King" + i +"/");
+            // writes data for ids
+            // subfolder name is "our"
+            for (String address : addresses){
+                write(address, path + "our/");
             }
 
-            TimeUnit.SECONDS.sleep(20);
+            // writes data for the 2nd API
+            for (int i = 0; i < 3; i++){
+                write(Benton[i], path + "Benton/" + i + "/");
+                write(Engineering[i], path + "Engineering/" + i + "/");
+                write(King[i], path + "King/" + i +"/");
+            }
+            write(King[3], path + "King/3/");
+
+            // delay in seconds
+            TimeUnit.SECONDS.sleep(15);
         }
         
 
