@@ -2,6 +2,7 @@
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -59,6 +60,15 @@ public class APExtract {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
+
+        // makes directories
+        new File("data/AP/our").mkdir();
+        for (int i = 0; i < 3; i++){
+            new File("data/AP/Benton/" + i).mkdir();
+            new File("data/AP/Engineering/" + i).mkdir();
+            new File("data/AP/King/" + i).mkdir();
+        }
+        new File("data/AP/King/3").mkdir();
 
         // ids
         String ids[] = {"lean2", "purayia2", "hatajm", "raychov", "kraftjk", "mohamem", "campbest"};
@@ -126,6 +136,5 @@ public class APExtract {
             TimeUnit.SECONDS.sleep(15);
         }
         
-
     }
 }
