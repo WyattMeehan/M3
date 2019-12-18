@@ -47,28 +47,28 @@ public class Extract {
      */
 
     // converts from seconds to date
-    public static String sec2Date(int sec){
-        int hour = sec / 3600;
+    // public static String sec2Date(int sec){
+    //     int hour = sec / 3600;
 
-        // spare seconds
-        int left = sec - hour * 3600;
+    //     // spare seconds
+    //     int left = sec - hour * 3600;
 
-        int minute = left / 60;
-        int second = left - minute * 60;
-        String h = "" + hour;
-        String m = "" + minute;
-        String s = "" + second;
+    //     int minute = left / 60;
+    //     int second = left - minute * 60;
+    //     String h = "" + hour;
+    //     String m = "" + minute;
+    //     String s = "" + second;
 
-        // formats data
-        if (hour < 10)
-            h = "0" + h;
-        if (minute < 10)
-            m = "0" + m;
-        if (second < 10)
-            s = "0" + s;
+    //     // formats data
+    //     if (hour < 10)
+    //         h = "0" + h;
+    //     if (minute < 10)
+    //         m = "0" + m;
+    //     if (second < 10)
+    //         s = "0" + s;
 
-        return "" + h + ":" + m + ":" + s + ".000000";
-    }
+    //     return "" + h + ":" + m + ":" + s + ".000000";
+    // }
 
     // reads data from file to the array timestamps
     public static void read(String name, int pi) throws IOException {
@@ -90,17 +90,12 @@ public class Extract {
             // timeslot to put the data into
             int timeslot = (hour * 3600 + minute * 60 + second) / frequency;
 
-            // updates time so all request in a timeslot have the same date
-            int time = timeslot * frequency;
+
 
             Data data;
             if (day[timeslot].containsKey(mac))
                 data = day[timeslot].get(mac);
             else {
-
-                // updates date to fit with time slot
-                date = date.substring(0, 11) + sec2Date(time);
-
                 data = new Data(date, mac);
             }
             data.setSignal(signal, pi);
@@ -124,7 +119,6 @@ public class Extract {
             read(files[i], i);
         BufferedWriter writer = new BufferedWriter(new FileWriter(output, true));
         for (HashMap table : day){
-
             // writes all data in a timeslot
             Iterator iterator = table.entrySet().iterator();
             while (iterator.hasNext()){
