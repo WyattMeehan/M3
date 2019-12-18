@@ -1,11 +1,16 @@
-// Extracts data from pis
-// appends output file (does not rewrite)
+// reads files from folder data/Extraction/Pis
+// excludes the files that have been read
+// combines data from all pis
+// save data to files in folder data/Extraction/Output
+
 package Extraction;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -14,37 +19,76 @@ import Anonymization.Data;
 
 public class Extract {
 
-    // TO CHANGED
-    //
-    // data file names
-    static final String[] files = { "data/pi1.log", "data/pi1.log", "data/pi1.log", "data/pi4.log", "data/pi4.log" };
-    //
+    //// PARAMETERS (can be changed when used)
+
     // frequency (how long a timestamp in seconds)
     static final int frequency = 60;
-    // output file name
-    static final String output = "data/extract.txt";
-    //
 
+
+    //// VARIABLES (don't change when used)
+    
+    // data folder path
+    static final String path = "data/Extraction/";
+
+    // data for a day
     static HashMap<String, Data>[] day;
 
-    /*
-     * // copy data public static void scp(String ip){
-     * 
-     * try{
-     * 
-     * // file name String file = "~/Desktop/M3-Project/scans/m3Scans.log"; file =
-     * file.replace("'", "'\"'\"'"); file = "'" + file + "'";
-     * 
-     * // connects JSch jsch = new JSch(); Session session = jsch.getSession("root",
-     * ip, 22); UserInfo info = new Info(); session.setUserInfo(info);
-     * session.connect();
-     * 
-     * // scp Channel channel = session.openChannel("exec"); String command =
-     * "scp -f " + file; ((ChannelExec)channel).setCommand(command);
-     * channel.connect();
-     * 
-     * session.disconnect(); } catch (Exception e){ System.out.println(e); } }
-     */
+
+    public static void main(String[] args) throws IOException {
+
+        // number of timestamps
+        final int no = 86400 / frequency;
+
+        // initializes an array of timestamps
+        day = new HashMap[no];  
+        for (int i = 0; i < no; i ++)
+            day[i] = new HashMap<String, Data>();
+
+        // path for pis' data folder
+        final String pis = "data/Extraction/Pis/";
+
+        // gets files' names (dates)
+        final File pi1 = new File(pis + "1");  // assumes that all pis collected data all the time
+                                                // samples only pi 1
+        ArrayList<String> names = new ArrayList<String>();
+        for (File file : pi1.listFiles())
+            names.add(file.getName());
+
+        // output folder path
+        final String folder = path + "output/";
+        
+        // reads excluding files' names
+        RandomAccessFile file = new RandomAccessFile(folder + "Exclusion.txt", "r");
+        ArrayList<String> excluded = new ArrayList<String>();
+        while (file.getFilePointer() < file.length())
+            excluded.add(file.readLine());
+        names.removeAll(excluded);
+        
+        // loops through all the files to extract data
+        for (String name : names){
+            for (int i = 0; i < 5; i++)
+                read(pis + i + "/" + name, i);
+
+            // output file name (date)
+            String output = folder + name + ".txt";
+
+            // writes output to file
+            BufferedWriter writer = new BufferedWriter(new FileWriter(output, true));
+            for (HashMap table : day){
+
+                // writes all data in a timeslot
+                Iterator iterator = table.entrySet().iterator();
+                while (iterator.hasNext()){
+                    Map.Entry request = (Map.Entry)iterator.next();
+                    writer.write(request.getValue().toString());
+                    writer.newLine();
+                }
+            
+            }
+            writer.close();
+        }
+        
+    }
 
     // converts from seconds to date
     // public static String sec2Date(int sec){
@@ -90,8 +134,7 @@ public class Extract {
             // timeslot to put the data into
             int timeslot = (hour * 3600 + minute * 60 + second) / frequency;
 
-
-
+            // saves data
             Data data;
             if (day[timeslot].containsKey(mac))
                 data = day[timeslot].get(mac);
@@ -100,35 +143,9 @@ public class Extract {
             }
             data.setSignal(signal, pi);
             day[timeslot].put(mac, data);
+
         }
         file.close();
     }
 
-    public static void main(String[] args) throws IOException {
-
-        // computes the number of timestamps
-        int no = 86400 / frequency;
-
-        // initializes an array of timestamps
-        day = new HashMap[no];
-        for (int i = 0; i < no; i ++){
-            day[i] = new HashMap<String, Data>();
-        }
-
-        for (int i = 0; i < files.length; i++)
-            read(files[i], i);
-        BufferedWriter writer = new BufferedWriter(new FileWriter(output, true));
-        for (HashMap table : day){
-            // writes all data in a timeslot
-            Iterator iterator = table.entrySet().iterator();
-            while (iterator.hasNext()){
-                Map.Entry request = (Map.Entry)iterator.next();
-                writer.write(request.getValue().toString());
-                writer.newLine();
-            }
-            
-        }
-        writer.close();
-    }
-    
 }
