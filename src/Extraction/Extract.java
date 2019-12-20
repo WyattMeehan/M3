@@ -53,9 +53,10 @@ public class Extract {
         ArrayList<String> names = new ArrayList<String>();
         for (File file : pi1.listFiles())
             names.add(file.getName());
-
+        System.out.println(names.size() + " files/pi");
+        
         // output folder path
-        final String folder = path + "output/";
+        final String folder = path + "Output/";
         
         // reads excluding files' names
         RandomAccessFile file = new RandomAccessFile(folder + "Exclusion.txt", "r");
@@ -66,8 +67,8 @@ public class Extract {
         
         // loops through all the files to extract data
         for (String name : names){
-            for (int i = 0; i < 5; i++)
-                read(pis + i + "/" + name, i);
+            for (int i = 1; i < 6; i++)
+                read(pis + i + "/" + name, i - 1);
 
             // output file name (date)
             String output = folder + name + ".txt";
@@ -116,6 +117,7 @@ public class Extract {
 
     // reads data from file to the array timestamps
     public static void read(String name, int pi) throws IOException {
+        System.out.println("reading " + name);
         RandomAccessFile file = new RandomAccessFile(name, "r");
         while (file.getFilePointer() < file.length()){
 
