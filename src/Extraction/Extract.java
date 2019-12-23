@@ -1,7 +1,8 @@
 // reads files from folder data/Extraction/Pis
-// excludes the files that have been read
+// excludes the files that have been read (in data/Extraction/Output/Exclusion.txt)
 // combines data from all pis
 // save data to files in folder data/Extraction/Output
+// extracted file list is saved in data/Extraction/Output/Exclusion.txt
 
 package Extraction;
 
@@ -59,11 +60,14 @@ public class Extract {
         final String folder = path + "Output/";
         
         // reads excluding files' names
-        RandomAccessFile file = new RandomAccessFile(folder + "Exclusion.txt", "r");
+        RandomAccessFile file = new RandomAccessFile(folder + "Exclusion.txt", "rw");
         ArrayList<String> excluded = new ArrayList<String>();
         while (file.getFilePointer() < file.length())
             excluded.add(file.readLine());
         names.removeAll(excluded);
+        for (String name : names)
+            file.writeBytes(name + "\r\n");
+        file.close();
         
         // loops through all the files to extract data
         for (String name : names){
