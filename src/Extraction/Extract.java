@@ -54,7 +54,6 @@ public class Extract {
         ArrayList<String> names = new ArrayList<String>();
         for (File file : pi1.listFiles())
             names.add(file.getName());
-        System.out.println(names.size() + " files/pi");
         
         // output folder path
         final String folder = path + "Output/";
@@ -75,7 +74,7 @@ public class Extract {
                 read(pis + i + "/" + name, i - 1);
 
             // output file name (date)
-            String output = folder + name + ".txt";
+            String output = folder + name.substring(12) + ".txt";
 
             // writes output to file
             BufferedWriter writer = new BufferedWriter(new FileWriter(output, true));
