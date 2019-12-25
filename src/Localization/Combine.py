@@ -7,10 +7,14 @@ import json
 #### PARAMETERS
 
 
+## how long is a timestamp in seconds
+seconds = 10
+
+
 #### VARIABLES (don't change)
 
-## list of MAC addresses
-addresses = []
+## dictionary of MAC addresses and data
+addresses = {}
 
 
 ## reads data from pis (from Extraction output)
@@ -22,6 +26,7 @@ def read_pi():
 def read_AP():
 
     ## gets all files in AP data folder
+    ## for each MAC address, saves locations in timeslots
     path = './data/AP/our/'
     for file in os.listdir(path):
         with open(path + file, 'r') as data_file:
@@ -40,9 +45,24 @@ def read_AP():
                         x_coor = location['x']
                         y_coor = location['y']
 
-                        ## adds new MAC address to the list
-                        if addresses.index(address) < 0:
-                            addresses.append(address)
+                        ## converts time to integer
+                        h = int(time[11:13])
+                        m = int(time[14:16])
+                        s = int(time[17:19])
+                        sec = h * 3600 + m * 60 + s
+
+                        ## timeslot
+                        slot = int(sec / seconds)
+
+                        ## adds time and location data to a MAC address
+                        if address in addresses:
+                            dictionary = addresses[address]
+                            dictionary[slot] = (x_coor, y_coor)
+
+                        ## or appends a new MAC address to the list
+                        else:
+                            dictionary = {time : (x_coor, y_coor)}
+                            addresses[slot] = dictionary
 
                 line = data_file.readline()
 
