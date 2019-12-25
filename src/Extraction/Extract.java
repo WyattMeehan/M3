@@ -74,7 +74,12 @@ public class Extract {
                 read(pis + i + "/" + name, i - 1);
 
             // output file name (date)
-            String output = folder + name.substring(12) + ".txt";
+            // to match with AP data file name
+            String date = name.substring(12);
+            String y = date.substring(0, 4);
+            String m = date.substring(5, 7);
+            String d = date.substring(8, 10);
+            String output = folder + d + "-" + m + "-" + y + ".txt";
 
             // writes output to file
             BufferedWriter writer = new BufferedWriter(new FileWriter(output, true));
@@ -93,30 +98,6 @@ public class Extract {
         }
         
     }
-
-    // converts from seconds to date
-    // public static String sec2Date(int sec){
-    //     int hour = sec / 3600;
-
-    //     // spare seconds
-    //     int left = sec - hour * 3600;
-
-    //     int minute = left / 60;
-    //     int second = left - minute * 60;
-    //     String h = "" + hour;
-    //     String m = "" + minute;
-    //     String s = "" + second;
-
-    //     // formats data
-    //     if (hour < 10)
-    //         h = "0" + h;
-    //     if (minute < 10)
-    //         m = "0" + m;
-    //     if (second < 10)
-    //         s = "0" + s;
-
-    //     return "" + h + ":" + m + ":" + s + ".000000";
-    // }
 
     // reads data from file to the array timestamps
     public static void read(String name, int pi) throws IOException {
