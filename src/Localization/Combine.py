@@ -1,5 +1,6 @@
 # Combine data from pis (from Extraction output) and data from AP (data/AP/our) 
 # using MAC addresses and time
+# saves combined data to data/Localization/data.csv
 
 import os
 import json
@@ -62,8 +63,6 @@ def read_pi():
                         # matches with AP data
                         dictionary = addresses[address]
                         if slot in dictionary:
-
-                            print(address + ' ' + time + ' ' + str(dictionary[slot]))
 
                             # signal strength for pi 5 includes line break character
                             parts[6] = parts[6][0:-1]
@@ -132,6 +131,8 @@ def read_AP():
 def main():
     read_AP()
     result = read_pi()
-    print(np.shape(result))
+
+    # saves data to file
+    np.savetxt('./data/Localization/data.csv', result)
 
 main()
