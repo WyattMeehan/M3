@@ -129,7 +129,12 @@ def main():
     # number of matches
     print(str(np.shape(result)[1]) + ' matches')
 
+    # shuffles data set
+    np.random.shuffle(result.T)
+
     # saves data to file
-    np.savetxt('./data/Localization/data.csv', result)
+    np.savetxt('./data/Localization/valid.csv', result[:,:5])
+    np.savetxt('./data/Localization/test.csv', result[:,5:10])
+    np.savetxt('./data/Localization/train.csv', result[:,10:])
 
 main()
