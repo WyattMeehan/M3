@@ -1,3 +1,7 @@
 #!/bin/bash
+echo "updating pip"
+python -m pip install --upgrade pip
 echo "installing numpy"
-pip install numpy
+python -m pip install numpy
+echo "installing tensorflow"
+python -m pip install tensorflow-gpu

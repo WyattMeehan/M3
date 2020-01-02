@@ -1,6 +1,7 @@
 # Combine data from pis (from Extraction output) and data from AP (data/AP/our) 
 # using MAC addresses and time
-# saves combined data to data/Localization/data.csv
+# saves combined data to train set, dev set and test set at data/Localization/data.csv
+
 # runs dependencies.sh to install required package(s)
 
 import os
@@ -13,6 +14,9 @@ import numpy as np
 
 # how long is a timestamp in seconds
 seconds = 4
+
+# size of dev and test sets
+size = 5
 
 
 ## VARIABLES (don't change)
@@ -116,7 +120,7 @@ def main():
 
     pi_path = './data/Extraction/Output/'
     AP_path = './data/AP/our/'
-    result = np.zeros((7,0))
+    result = np.zeros((7, 0))
 
     # finds same day files in 2 data folder
     for file in os.listdir(pi_path):
@@ -132,9 +136,12 @@ def main():
     # shuffles data set
     np.random.shuffle(result.T)
 
+    # total size of test and dev sets
+    total = size * 2
+
     # saves data to file
-    np.savetxt('./data/Localization/valid.csv', result[:,:5])
-    np.savetxt('./data/Localization/test.csv', result[:,5:10])
-    np.savetxt('./data/Localization/train.csv', result[:,10:])
+    np.savetxt('./data/Localization/valid.csv', result[:,:size])
+    np.savetxt('./data/Localization/test.csv', result[:,size:total])
+    np.savetxt('./data/Localization/train.csv', result[:,total:])
 
 main()
