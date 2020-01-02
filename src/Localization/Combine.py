@@ -2,7 +2,10 @@
 # using MAC addresses and time
 # saves combined data to train set, dev set and test set at data/Localization/data.csv
 
-# runs dependencies.sh to install required package(s)
+## REQUIREMENTS (subjects to change as software got updated)
+# for tensorflow: https://www.tensorflow.org/install/gpu#hardware_requirements
+# missing cudart64_100.dll problem: https://www.joe0.com/2019/10/19/how-resolve-tensorflow-2-0-error-could-not-load-dynamic-library-cudart64_100-dll-dlerror-cudart64_100-dll-not-found/
+# then runs dependencies.sh to install required package(s)
 
 import os
 import json
@@ -11,12 +14,8 @@ import numpy as np
 
 ## PARAMETERS
 
-
 # how long is a timestamp in seconds
 seconds = 4
-
-# size of dev and test sets
-size = 5
 
 
 ## VARIABLES (don't change)
@@ -35,7 +34,7 @@ def compute(time):
 # matches with data from AP through timeslot
 def read_pi(path, file, addresses):
 
-    result = np.zeros((7, 0))
+    result = np.zeros((8, 0))
 
     with open(path + file, 'r') as data_file:
         line = data_file.readline()
@@ -62,10 +61,8 @@ def read_pi(path, file, addresses):
 
                     # formats current example
                     strength = np.array(strength)
-                    location = dictionary[slot]
-                    location = np.array(location)
-                    example = np.concatenate((strength.T, location.T))
-                    example = np.reshape(example, (7, 1))
+                    location = np.array(dictionary[slot])
+                    example = np.reshape(np.concatenate((strength.T, location.T)), (8, 1))
                     result = np.concatenate((result, example), axis=1)
 
             # proceeds to next line
@@ -90,26 +87,40 @@ def read_AP(path, file):
                 # interprets data in JSON format
                 devices = json.loads(line)
                 for device in devices:
-                    address = device['macAddress']
-                    time = device['lastSeen']
-                    location = device['locationCoordinate']
-                    x_coor = location['x']
-                    y_coor = location['y']
 
-                    # timeslot
-                    slot = compute(time)
+                    # filters only data in Benton
+                    details = device['hierarchyDetails']
+                    if details['building']['name'] == 'Benton Hall':
 
-                    # retrieves a MAC address's data from the dictionary of MAC addresses
-                    if address in addresses:
-                        dictionary = addresses[address]
-                        dictionary[slot] = (x_coor, y_coor)
+                        address = device['macAddress']
+                        time = device['lastSeen']
+                        location = device['locationCoordinate']
+                        x_coor = location['x']
+                        y_coor = location['y']
 
-                    # or creates a new one
-                    else:
-                        dictionary = {slot : (x_coor, y_coor)}
+                        # floor
+                        floor = details['floor']['name']
+                        if floor == '2nd Floor':
+                            floor_number = 2
+                        elif floor == '1st Floor':
+                            floor_number = 1
+                        else:
+                            floor_number = 0
 
-                    # saves it back to the dictionary
-                    addresses[address] = dictionary
+                        # timeslot
+                        slot = compute(time)
+
+                        # retrieves a MAC address's data from the dictionary of MAC addresses
+                        if address in addresses:
+                            dictionary = addresses[address]
+                            dictionary[slot] = (x_coor, y_coor, floor_number)
+
+                        # or creates a new one
+                        else:
+                            dictionary = {slot : (x_coor, y_coor, floor_number)}
+
+                        # saves it back to the dictionary
+                        addresses[address] = dictionary
 
             # proceeds to next line
             line = data_file.readline()
@@ -120,7 +131,7 @@ def main():
 
     pi_path = './data/Extraction/Output/'
     AP_path = './data/AP/our/'
-    result = np.zeros((7, 0))
+    result = np.zeros((8, 0))
 
     # finds same day files in 2 data folder
     for file in os.listdir(pi_path):
@@ -136,12 +147,7 @@ def main():
     # shuffles data set
     np.random.shuffle(result.T)
 
-    # total size of test and dev sets
-    total = size * 2
-
     # saves data to file
-    np.savetxt('./data/Localization/valid.csv', result[:,:size])
-    np.savetxt('./data/Localization/test.csv', result[:,size:total])
-    np.savetxt('./data/Localization/train.csv', result[:,total:])
+    np.savetxt('./data/Localization/data.csv', result)
 
 main()

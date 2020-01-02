@@ -1,11 +1,14 @@
 # DNN model to learn the relation between signal strength and location
 
-# REQUIREMENTS: https://www.tensorflow.org/install/gpu#hardware_requirements
+# runs Combine.py first
 
 import numpy as np
 import tensorflow as tf
 
 def main():
-    print()
+    
+    # loads data
+    data = np.loadtxt('./data/Localization/data.csv')
+    print(np.shape(data)[1])
 
 main()
