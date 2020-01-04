@@ -1,6 +1,6 @@
 # Combine data from pis (from Extraction output) and data from AP (data/AP/our) 
 # using MAC addresses and time
-# saves combined data to train set, dev set and test set at data/Localization/data.csv
+# saves combined data set at data/Localization/data.csv
 
 ## REQUIREMENTS (subjects to change as software got updated)
 # for tensorflow: https://www.tensorflow.org/install/gpu#hardware_requirements
@@ -34,7 +34,7 @@ def compute(time):
 # matches with data from AP through timeslot
 def read_pi(path, file, addresses):
 
-    result = np.zeros((8, 0))
+    result = np.zeros((0, 8))
 
     with open(path + file, 'r') as data_file:
         line = data_file.readline()
@@ -60,10 +60,9 @@ def read_pi(path, file, addresses):
                     strength = parts[2:]
 
                     # formats current example
-                    strength = np.array(strength)
-                    location = np.array(dictionary[slot])
-                    example = np.reshape(np.concatenate((strength.T, location.T)), (8, 1))
-                    result = np.concatenate((result, example), axis=1)
+                    example = np.concatenate((np.array(strength), np.array(dictionary[slot])))
+                    example = np.reshape(example, (1, 8))
+                    result = np.concatenate((result, example))
 
             # proceeds to next line
             line = data_file.readline()
@@ -131,7 +130,7 @@ def main():
 
     pi_path = './data/Extraction/Output/'
     AP_path = './data/AP/our/'
-    result = np.zeros((8, 0))
+    result = np.zeros((0, 8))
 
     # finds same day files in 2 data folder
     for file in os.listdir(pi_path):
@@ -139,13 +138,14 @@ def main():
 
             print('reading ' + str(file))
             addresses = read_AP(AP_path, file)
-            result = np.concatenate((result, read_pi(pi_path, file, addresses)), axis = 1)
+            day = read_pi(pi_path, file, addresses)
+            result = np.concatenate((result, day))
 
     # number of matches
-    print(str(np.shape(result)[1]) + ' matches')
+    print(str(np.shape(result)[0]) + ' matches')
 
     # shuffles data set
-    np.random.shuffle(result.T)
+    np.random.shuffle(result)
 
     # saves data to file
     np.savetxt('./data/Localization/data.csv', result)
