@@ -5,6 +5,7 @@
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
 
 ## PARAMETERS
 
@@ -92,6 +93,13 @@ def handle():
     # visualizes the locations
     if plotting:
         visualize(Y_train, Y_dev, Y_test)
+
+    # normalizes data
+    scaler = StandardScaler()
+    X_train = scaler.fit_transform(X_train)
+    X_dev = scaler.transform(X_dev)
+    X_test = scaler.transform(X_test)
+    print(X_train)
 
 def main():
     handle()

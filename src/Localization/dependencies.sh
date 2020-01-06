@@ -7,3 +7,5 @@ echo "installing tensorflow"
 python -m pip install tensorflow-gpu
 echo "installing matplotlib"
 python -m pip install matplotlib
+echo "installing scikit-learn"
+python -m pip install scikit-learn
