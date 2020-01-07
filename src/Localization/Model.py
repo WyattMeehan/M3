@@ -3,9 +3,14 @@
 # runs Combine.py first
 
 import numpy as np
-import tensorflow as tf
+import keras
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
+from keras.models import Model
+from keras.layers import Dense, Input
+import keras.backend as bk
+from keras.losses import mse
+from keras.optimizers import SGD
 
 ## PARAMETERS
 
@@ -16,8 +21,19 @@ test_size = 2
 dev_size = 2
 
 # plot option
-plotting = True
+plotting = False
 
+# model dimesion
+dimension = [4]
+
+# number of epochs
+no = 10
+
+# batch size
+size = 4
+
+# weight for floor (compare to weight for coordinate)
+weight = 2
 
 # seperates floors
 def seperate(set):
@@ -45,9 +61,9 @@ def plot(fig, x, y):
     fig.set_aspect('equal')
     fig.set_xlim([0, 250])
     fig.set_ylim([0, 250])
-    fig.scatter(x[0], y[0], color = "blue")
-    fig.scatter(x[1], y[1], color = "green")
-    fig.scatter(x[2], y[2], color = "red")
+    fig.scatter(x[0], y[0], color = 'blue')
+    fig.scatter(x[1], y[1], color = 'green')
+    fig.scatter(x[2], y[2], color = 'red')
 
 # visualizes location
 def visualize(Y_train, Y_dev, Y_test):
@@ -99,9 +115,47 @@ def handle():
     X_train = scaler.fit_transform(X_train)
     X_dev = scaler.transform(X_dev)
     X_test = scaler.transform(X_test)
-    print(X_train)
+
+    return [X_train, X_dev, X_test], [Y_train, Y_dev, Y_test]
+
+# builds model
+def build(X, Y):
+
+    # number of train samples
+    number = np.shape(X[0])[0]
+
+    # input layer
+    input_layer = Input((5,))
+
+    # hidden layers
+    hidden = input_layer
+    for layer in dimension:
+        hidden = Dense(layer, kernel_initializer='uniform', activation='relu')(hidden)
+
+    # output layers
+    output_0 = Dense(1, kernel_initializer='uniform', activation='relu', name = 'output_0')(hidden)
+    output_1 = Dense(1, kernel_initializer='uniform', activation='relu', name = 'output_1')(hidden)
+    output_2 = Dense(1, kernel_initializer='uniform', activation='relu', name = 'output_2')(hidden)
+
+    # optimizer
+    optimizer = SGD(nesterov=True)
+
+    # output weight
+    weight_coor = np.ones((number, ))
+    weight_floor = np.ones((number, )) * 2 * weight
+
+    # trains model
+    model = Model(input_layer, [output_0, output_1, output_2])
+    model.compile(loss='mean_squared_error', optimizer=optimizer)
+    model.fit(X[0], [Y[0][:,0], Y[0][:,1], Y[0][:,2]], epochs=no, validation_data=(X[1], [Y[1][:,0], Y[1][:,1], Y[1][:,2]]),
+                batch_size=size, sample_weight={'output_0': weight_coor, 'output_1': weight_coor, 'output_2': 2 * weight_floor})
+
+    # test model
+    evaluation = model.evaluate(X[2], [Y[2][:,0], Y[2][:,1], Y[2][:,2]])
+    print(evaluation)
 
 def main():
-    handle()
+    X, Y = handle()
+    build(X, Y)
 
 main()

@@ -3,8 +3,10 @@
 # saves combined data set at data/Localization/data.csv
 
 ## REQUIREMENTS (subjects to change as software got updated)
+# Microsoft Visual C++ 14.0 or above
 # for tensorflow: https://www.tensorflow.org/install/gpu#hardware_requirements
 # missing cudart64_100.dll problem: https://www.joe0.com/2019/10/19/how-resolve-tensorflow-2-0-error-could-not-load-dynamic-library-cudart64_100-dll-dlerror-cudart64_100-dll-not-found/
+# missing cublas64_100.dll problem: in the same folder as the above problem, copy cublas64_10.dll to cublas64_100.dll
 # then runs dependencies.sh to install required package(s)
 
 import os
