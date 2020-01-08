@@ -1,4 +1,5 @@
 # DNN model to learn the relation between signal strength and location
+# set plot option to True for visualization of devices' locations
 
 # runs Combine.py first
 
@@ -152,7 +153,14 @@ def build(X, Y):
 
     # test model
     evaluation = model.evaluate(X[2], [Y[2][:,0], Y[2][:,1], Y[2][:,2]])
+    print('\nevaluation of test set: ')
     print(evaluation)
+
+    # serializes and saves model
+    json = model.to_json()
+    with open('./data/Localization/model.json', 'w') as file:
+        file.write(json)
+    model.save_weights('./data/Localization/weights.h5')
 
 def main():
     X, Y = handle()
