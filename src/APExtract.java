@@ -61,6 +61,9 @@ public class APExtract {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
+        for (int i = 0; i < 5; i++)
+            System.out.println("Getting data from AP");
+
         // makes directories
         new File("data/AP/our").mkdir();
         for (int i = 0; i < 3; i++){
