@@ -16,57 +16,68 @@ import java.util.concurrent.TimeUnit;
 public class APExtract {
 
     // gets data from AP
-    public static String[] get(String id) throws IOException{
+    public static String[] get(String id) {
         String result[] = new String[2];
 
         // sets url
-        URL api = new URL(id);
+        URL api;
+        try {
+            api = new URL(id);
 
-        // initiates connection
-        HttpURLConnection connect = (HttpURLConnection)api.openConnection();
-        connect.addRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
+            // initiates connection
+            HttpURLConnection connect = (HttpURLConnection) api.openConnection();
+            connect.addRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
 
-        // gets response code
-        int code = connect.getResponseCode();
-        result[0] = "" + code;
+            // gets response code
+            int code = connect.getResponseCode();
+            result[0] = "" + code;
 
-        // gets response
-        BufferedReader in = new BufferedReader(new InputStreamReader(connect.getInputStream())); 
-        String inputLine;
-        StringBuffer response = new StringBuffer(); 
-        while ((inputLine = in.readLine()) != null)
-            response.append(inputLine); 
-        result[1] = response.toString(); 
-        in.close();
+            // gets response
+            BufferedReader in = new BufferedReader(new InputStreamReader(connect.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null)
+                response.append(inputLine);
+            result[1] = response.toString();
+            in.close();
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return result;
     }
 
     // writes to file whose name is current date
-    public static void write(String address, String path) throws IOException {
+    public static void write(String address, String path) {
 
         // date format
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
 
-        BufferedWriter writer = new BufferedWriter(new FileWriter(path + format.format(new Date()) + ".txt", true)); 
-        String response[] = get(address);
-        if (response[1].length() > 2){
-            writer.write(response[1]);
-            writer.newLine();
-            writer.newLine();
+        BufferedWriter writer;
+        try {
+            writer = new BufferedWriter(new FileWriter(path + format.format(new Date()) + ".txt", true));
+            String response[] = get(address);
+            if (response[1].length() > 2) {
+                writer.write(response[1]);
+                writer.newLine();
+                writer.newLine();
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        
-        writer.close();
+
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) {
 
         for (int i = 0; i < 5; i++)
             System.out.println("Getting data from AP");
 
         // makes directories
         new File("data/AP/our").mkdir();
-        for (int i = 0; i < 3; i++){
+        for (int i = 0; i < 3; i++) {
             new File("data/AP/Benton/" + i).mkdir();
             new File("data/AP/Engineering/" + i).mkdir();
             new File("data/AP/King/" + i).mkdir();
@@ -74,7 +85,7 @@ public class APExtract {
         new File("data/AP/King/3").mkdir();
 
         // ids
-        String ids[] = {"lean2", "purayia2", "hatajm", "raychov", "kraftjk", "mohamem", "campbest"};
+        String ids[] = { "lean2", "purayia2", "hatajm", "raychov", "kraftjk", "mohamem", "campbest" };
 
         // API addresses for ids
         ArrayList<String> addresses = new ArrayList<String>();
@@ -85,7 +96,7 @@ public class APExtract {
         String API2 = "http://csebu.csi.miamioh.edu/cmx/v1/AABFG/activeCount/Oxford%3E";
 
         // buildings (Benton, Engineering Building, King)
-        String[] buildings = {"Benton%20Hall%3E", "Engineering%20Building%3E", "King%20Library3E"};
+        String[] buildings = { "Benton%20Hall%3E", "Engineering%20Building%3E", "King%20Library3E" };
 
         // Benton
         // 0: basement
@@ -116,27 +127,31 @@ public class APExtract {
         King[2] = API2 + buildings[2] + "King%20Library%202nd%20Floor";
         King[3] = API2 + buildings[2] + "King%20Library%203rd%20Floor";
 
-        while (true){
+        while (true) {
 
             // path to store data
             String path = "data/AP/";
 
             // writes data for ids
             // subfolder name is "our"
-            for (String address : addresses){
+            for (String address : addresses) {
                 write(address, path + "our/");
             }
 
             // writes data for the 2nd API
-            for (int i = 0; i < 3; i++){
+            for (int i = 0; i < 3; i++) {
                 write(Benton[i], path + "Benton/" + i + "/");
                 write(Engineering[i], path + "Engineering/" + i + "/");
-                write(King[i], path + "King/" + i +"/");
+                write(King[i], path + "King/" + i + "/");
             }
             write(King[3], path + "King/3/");
 
             // delay in seconds
-            TimeUnit.SECONDS.sleep(15);
+            try {
+                TimeUnit.SECONDS.sleep(15);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         
     }
