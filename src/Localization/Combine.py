@@ -11,13 +11,13 @@
 
 import os
 import json
-import numpy as np
-
+#import numpy as np
+import pandas as pd
 
 ## PARAMETERS
 
 # how long is a timestamp in seconds
-seconds = 4
+seconds = 10
 
 
 ## VARIABLES (don't change)
@@ -34,11 +34,11 @@ def compute(time):
 
 # reads data from pis (from Extraction output)
 # matches with data from AP through timeslot
-def read_pi(path, file, addresses):
+def read_pi(path, addresses):
 
-    result = np.zeros((0, 8))
+    result = []
 
-    with open(path + file, 'r') as data_file:
+    with open(path) as data_file:
         line = data_file.readline()
         while line:
 
@@ -61,24 +61,28 @@ def read_pi(path, file, addresses):
                     parts[6] = parts[6][0:-1]
                     strength = parts[2:]
 
-                    # formats current example
-                    example = np.concatenate((np.array(strength), np.array(dictionary[slot])))
-                    example = np.reshape(example, (1, 8))
-                    result = np.concatenate((result, example))
+                    # adds current instance into result list
+                    # example = np.concatenate((np.array(strength), np.array(dictionary[slot])))
+                    # example = np.reshape(example, (1, 8))
+                    # result = np.concatenate((result, example))
+                    parts.extend(dictionary[slot])
+                    for index in range(2, len(parts)):
+                        parts[index] = int(parts[index])
+                    result.append(parts)
 
             # proceeds to next line
             line = data_file.readline()
 
-    return result.astype(np.float)
+    return result
 
 # reads AP data to get MAC addresses, time and location
 # for each MAC address, saves locations in timeslots
-def read_AP(path, file):
+def read_AP(path):
 
     # dictionary of MAC addresses and location, time
     addresses = {}
 
-    with open(path + file, 'r') as data_file:
+    with open(path) as data_file:
         line = data_file.readline()
         while line:
 
@@ -91,37 +95,37 @@ def read_AP(path, file):
 
                     # filters only data in Benton
                     details = device['hierarchyDetails']
-                    if details['building']['name'] == 'Benton Hall':
+                    #if details['building']['name'] == 'Benton Hall':
 
-                        address = device['macAddress']
-                        time = device['lastSeen']
-                        location = device['locationCoordinate']
-                        x_coor = location['x']
-                        y_coor = location['y']
+                    address = device['macAddress']
+                    time = device['lastSeen']
+                    location = device['locationCoordinate']
+                    x_coor = location['x']
+                    y_coor = location['y']
 
-                        # floor
-                        floor = details['floor']['name']
-                        if floor == '2nd Floor':
-                            floor_number = 2
-                        elif floor == '1st Floor':
-                            floor_number = 1
-                        else:
-                            floor_number = 0
+                    # floor
+                    floor = details['floor']['name']
+                    if floor == '2nd Floor':
+                        floor_number = 2
+                    elif floor == '1st Floor':
+                        floor_number = 1
+                    else:
+                        floor_number = 0
 
-                        # timeslot
-                        slot = compute(time)
+                    # timeslot
+                    slot = compute(time)
 
-                        # retrieves a MAC address's data from the dictionary of MAC addresses
-                        if address in addresses:
-                            dictionary = addresses[address]
-                            dictionary[slot] = (x_coor, y_coor, floor_number)
+                    # retrieves a MAC address's data from the dictionary of MAC addresses
+                    if address in addresses:
+                        dictionary = addresses[address]
+                        dictionary[slot] = [x_coor, y_coor, floor_number]
 
-                        # or creates a new one
-                        else:
-                            dictionary = {slot : (x_coor, y_coor, floor_number)}
+                    # or creates a new one
+                    else:
+                        dictionary = {slot : [x_coor, y_coor, floor_number]}
 
-                        # saves it back to the dictionary
-                        addresses[address] = dictionary
+                    # saves it back to the dictionary
+                    addresses[address] = dictionary
 
             # proceeds to next line
             line = data_file.readline()
@@ -130,26 +134,31 @@ def read_AP(path, file):
 
 def main():
 
-    pi_path = './data/Extraction/Output/'
-    AP_path = './data/AP/our/'
+    # result data
+    data = []
+
+    pi_path = './data/Extraction/Output/pi.txt'
+    AP_path = './data/AP/Benton/'
     result = np.zeros((0, 8))
 
     # finds same day files in 2 data folder
-    for file in os.listdir(pi_path):
-        if file in os.listdir(AP_path):
+    # for file in os.listdir(pi_path):
+    #     if file in os.listdir(AP_path):
+    for floor in range(3):
+        floor_str = str(floor)
+        print('reading floor ' + floor_str)
+        addresses = read_AP(AP_path + floor_str + '/21-02-2020.txt')
+        data.extend(read_pi(pi_path, addresses))
+        #result = np.concatenate((result, day))
 
-            print('reading ' + str(file))
-            addresses = read_AP(AP_path, file)
-            day = read_pi(pi_path, file, addresses)
-            result = np.concatenate((result, day))
+    # result data frame
+    frame = pd.DataFrame(data = data, columns = ['time', 'MAC address', 'pi1', 'pi2', 'pi3', 'pi4', 'pi5', 'x', 'y', 'floor'])
 
     # number of matches
-    print(str(np.shape(result)[0]) + ' matches')
-
-    # shuffles data set
-    np.random.shuffle(result)
+    print(str(len(frame.index)) + ' matches')
 
     # saves data to file
-    np.savetxt('./data/Localization/data.csv', result)
+    #np.savetxt('./data/Localization/data.csv', result)
+    frame.to_csv('./data/Localization/data.csv', index=False)
 
 main()

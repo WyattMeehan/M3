@@ -58,22 +58,21 @@ public class APExtract {
             writer = new BufferedWriter(new FileWriter(path + format.format(new Date()) + ".txt", true));
             String response[] = get(address);
             if (response[1].length() > 2) {
-                writer.write(response[1]);
-                writer.newLine();
-                writer.newLine();
-            }
-
+            writer.write(response[1]);
+            writer.newLine();
+            writer.newLine();
             writer.close();
-        } catch (IOException e) {
+        }
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        
+
+        
 
     }
 
     public static void main(String[] args) {
-
-        for (int i = 0; i < 5; i++)
-            System.out.println("Getting data from AP");
 
         // makes directories
         new File("data/AP/our").mkdir();
@@ -129,26 +128,29 @@ public class APExtract {
 
         while (true) {
 
+            System.out.println("Getting data");
             // path to store data
             String path = "data/AP/";
 
             // writes data for ids
             // subfolder name is "our"
-            for (String address : addresses) {
-                write(address, path + "our/");
-            }
+            // for (String address : addresses) {
+            //     write(address, path + "our/");
+            // }
 
+            
             // writes data for the 2nd API
             for (int i = 0; i < 3; i++) {
                 write(Benton[i], path + "Benton/" + i + "/");
-                write(Engineering[i], path + "Engineering/" + i + "/");
-                write(King[i], path + "King/" + i + "/");
+                //write(Engineering[i], path + "Engineering/" + i + "/");
+                //write(King[i], path + "King/" + i + "/");
             }
-            write(King[3], path + "King/3/");
+            //write(King[3], path + "King/3/");
+            
 
             // delay in seconds
             try {
-                TimeUnit.SECONDS.sleep(15);
+                TimeUnit.SECONDS.sleep(2);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
