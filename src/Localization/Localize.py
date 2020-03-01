@@ -25,7 +25,7 @@ def plot(fig):
 
 # tests
 def main():
-    X = np.array([[-121,-121,-121,-121,-121]])
+    X = np.array([[-69,-77,-63,-65,-47]])
     result = compute(X)
     print(result)
 

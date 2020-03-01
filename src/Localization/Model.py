@@ -16,6 +16,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 import keras.backend as K
+import math
 
 ## PARAMETERS
 
@@ -26,19 +27,22 @@ test_size = 0.2
 # dev_size = 2
 
 # plot option
-plotting = True
+plotting = False
 
 # model dimesion
-dimension = [4]
+dimension = [4, 4, 4, 4]
 
 # number of epochs
-no = 10
+no = 500
 
 # batch size
 size = 8
 
 # weight for floor (compare to weight for coordinate)
-# weight = 400
+weight = 90000
+
+# optimizer
+optimizer = 'nadam'
 
 # seperates floors
 def seperate(set):
@@ -192,9 +196,6 @@ def build(X_train, Y_train, X_test, Y_test):
     output_1 = Dense(1, kernel_initializer='uniform', activation='linear', name = 'output_1')(hidden)
     output_2 = Dense(1, kernel_initializer='uniform', activation='linear', name = 'output_2')(hidden)
 
-    # optimizer
-    optimizer = 'adam'
-
     # output weight
     # weight_coor = np.ones((number, ))
     # weight_floor = np.ones((number, )) * weight
@@ -202,18 +203,28 @@ def build(X_train, Y_train, X_test, Y_test):
     # trains model
     model = Model([input_layer, x_layer, y_layer, floor_layer], [output_0, output_1, output_2])
     #model.compile(loss='mean_squared_error', optimizer=optimizer)
-    loss = K.mean(((output_0 - x_layer) * (output_0 - x_layer) + (output_1 - y_layer) * (output_1 - y_layer)) 
-    * mse(output_2, floor_layer) * mse(output_2, floor_layer))
+    loss = K.mean(K.sqrt((K.square(output_0 - x_layer) + K.square(output_1 - y_layer)))) + weight * mse(output_2, floor_layer)
     model.add_loss(loss)
     model.compile(optimizer=optimizer)
     model.fit([X_train, Y_train[:,0], Y_train[:,1], Y_train[:,2]], epochs=no, batch_size=size)
 
     # test model
-    evaluation = model.evaluate([X_test, Y_test[:,0], Y_test[:,1], Y_test[:,2]])
+    evaluation = model.evaluate([X_test, Y_test[:,0], Y_test[:,1], Y_test[:,2]], batch_size=1)
     print('\nevaluation of test set: ')
     print(str(model.metrics_names) + ': ' + str(evaluation))
-    # dummy = np.array([[0]])
-    # print(model.predict([np.array([[-69,-77,-63,-65,-47]]), dummy, dummy, dummy]))
+    dummy = np.array([[0]])
+    distance_loss = 0
+    floor_loss = 0
+    length = X_test.shape[0]
+    for index in range(length):
+        inp = X_test[index]
+        out = Y_test[index]
+        prediction = model.predict([np.array([[inp[0], inp[1], inp[2], inp[3], inp[4]]]), dummy, dummy, dummy])
+        distance_loss += math.sqrt(math.pow(prediction[0][0] - out[0], 2) + math.pow(prediction[1][0] - out[1], 2))
+        floor_loss += abs(prediction[2][0] - out[2])
+    print('distance loss: ' + str(distance_loss / length))
+    print('floor loss: ' + str(floor_loss / length))
+    print('sample prediction: ' + str(model.predict([np.array([[-69,-77,-63,-65,-47]]), dummy, dummy, dummy])))
 
     # serializes and saves model
     json = model.to_json()
