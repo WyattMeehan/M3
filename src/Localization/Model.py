@@ -17,6 +17,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 import keras.backend as K
 import math
+from keras.layers.advanced_activations import PReLU
 
 ## PARAMETERS
 
@@ -27,13 +28,14 @@ test_size = 0.2
 # dev_size = 2
 
 # plot option
-plotting = False
+plotting = True
 
 # model dimesion
-dimension = [4, 4, 4, 4]
+coor_dimension = [4, 4]
+floor_dimension = [4, 8, 8]
 
 # number of epochs
-no = 500
+no = 200
 
 # batch size
 size = 8
@@ -67,14 +69,18 @@ def seperate(set):
 
 # plots each floor
 def plot(fig, x, y):
-    fig.set_aspect('equal')
-    fig.set_xlim([0, 250])
-    fig.set_ylim([0, 250])
+    # fig.set_aspect('equal')
+    # fig.set_xlim([0, 250])
+    # fig.set_ylim([0, 250])
     fig.scatter(x[0], y[0], color = 'blue')
     fig.scatter(x[1], y[1], color = 'green')
 
 # visualizes location
 def visualize(Y_train, Y_test):
+
+    floor_0 = plt.imread('./img/0.jpg')
+    floor_1 = plt.imread('./img/1.jpg')
+    floor_2 = plt.imread('./img/2.jpg')
     
     # seperates floor
     Y_train_0 = Y_train[Y_train['floor'] == 0]
@@ -100,7 +106,11 @@ def visualize(Y_train, Y_test):
     y_test_1 = Y_test_1['y'].tolist()
     y_test_2 = Y_test_2['y'].tolist()
 
-    _, (fig0, fig1, fig2) = plt.subplots(1, 3)
+    _, (fig2, fig1, fig0) = plt.subplots(3, 1)
+
+    fig2.imshow(floor_0, extent = (0, 250, 0, 120))
+    fig1.imshow(floor_1, extent = (0, 250, 0, 120))
+    fig0.imshow(floor_2, extent = (0, 250, 0, 120))
 
     # # basement
     plot(fig0, [x_train_0,  x_test_0], [y_train_0, y_test_0])
@@ -187,14 +197,23 @@ def build(X_train, Y_train, X_test, Y_test):
     floor_layer = Input((1,))
 
     # hidden layers
-    hidden = input_layer
-    for layer in dimension:
-        hidden = Dense(layer, kernel_initializer='uniform', activation='relu')(hidden)
+    hidden_x = input_layer
+    for layer in coor_dimension:
+        hidden_x = Dense(layer, kernel_initializer='uniform', activation='linear')(hidden_x)
+        hidden_x = PReLU()(hidden_x)
+    hidden_y = input_layer
+    for layer in coor_dimension:
+        hidden_y = Dense(layer, kernel_initializer='uniform', activation='linear')(hidden_y)
+        hidden_y = PReLU()(hidden_y)
+    hidden_floor = input_layer
+    for layer in floor_dimension:
+        hidden_floor = Dense(layer, kernel_initializer='uniform', activation='linear')(hidden_floor)
+        hidden_floor = PReLU()(hidden_floor)
 
     # output layers
-    output_0 = Dense(1, kernel_initializer='uniform', activation='linear', name = 'output_0')(hidden)
-    output_1 = Dense(1, kernel_initializer='uniform', activation='linear', name = 'output_1')(hidden)
-    output_2 = Dense(1, kernel_initializer='uniform', activation='linear', name = 'output_2')(hidden)
+    output_0 = Dense(1, kernel_initializer='uniform', activation='linear', name = 'output_0')(hidden_x)
+    output_1 = Dense(1, kernel_initializer='uniform', activation='linear', name = 'output_1')(hidden_y)
+    output_2 = Dense(1, kernel_initializer='uniform', activation='linear', name = 'output_2')(hidden_floor)
 
     # output weight
     # weight_coor = np.ones((number, ))
@@ -206,6 +225,7 @@ def build(X_train, Y_train, X_test, Y_test):
     loss = K.mean(K.sqrt((K.square(output_0 - x_layer) + K.square(output_1 - y_layer)))) + weight * mse(output_2, floor_layer)
     model.add_loss(loss)
     model.compile(optimizer=optimizer)
+    print(model.summary())
     model.fit([X_train, Y_train[:,0], Y_train[:,1], Y_train[:,2]], epochs=no, batch_size=size)
 
     # test model
@@ -234,6 +254,6 @@ def build(X_train, Y_train, X_test, Y_test):
 
 def main():
     X_train, Y_train, X_test, Y_test = handle()
-    build(X_train, Y_train, X_test, Y_test)
+    # build(X_train, Y_train, X_test, Y_test)
 
 main()

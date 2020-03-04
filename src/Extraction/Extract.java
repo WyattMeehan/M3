@@ -29,7 +29,7 @@ public class Extract {
     //// PARAMETERS (can be changed when used)
 
     // frequency (how long a timestamp in seconds)
-    static final int frequency = 10;
+    static final int frequency = 2;
 
     //// VARIABLES (don't change when used)
 
