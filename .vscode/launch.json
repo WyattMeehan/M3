@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Localization",
+            "request": "launch",
+            "mainClass": "TrilateralLocalization.Localization",
+            "projectName": "M3"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - Process",
             "request": "launch",
             "mainClass": "API.Process",
