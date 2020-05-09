@@ -1,8 +1,8 @@
 # produce location input from signal input
 
 import numpy as np
-import keras
-from keras.models import model_from_json
+import tensorflow.keras
+from tensorflow.keras.models import model_from_json
 import matplotlib.pyplot as plt
 
 # loads model

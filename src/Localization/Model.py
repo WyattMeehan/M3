@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from keras.models import Model
 from keras.layers import Dense, Input
-import keras.backend as bk
 from keras.losses import mse
 from keras.optimizers import SGD
 import pandas as pd
