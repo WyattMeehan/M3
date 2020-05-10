@@ -4,30 +4,31 @@
 # runs Combine.py first
 
 import numpy as np
-import keras
+import tensorflow.keras
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
-from keras.models import Model
-from keras.layers import Dense, Input
-from keras.losses import mse
-from keras.optimizers import SGD
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.losses import mse
+from tensorflow.keras.optimizers import SGD
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
-import keras.backend as K
+import tensorflow.keras.backend as K
 import math
-from keras.layers.advanced_activations import PReLU
+from tensorflow.python.keras.layers.advanced_activations import PReLU
+from sklearn.model_selection import StratifiedKFold
 
 ## PARAMETERS
 
 # test set size
-test_size = 0.2
+test_size = 0.1
 
 # dev set size
 # dev_size = 2
 
 # plot option
-plotting = True
+plotting = False
 
 # model dimesion
 coor_dimension = [4, 4]
@@ -39,11 +40,11 @@ no = 200
 # batch size
 size = 8
 
-# weight for floor (compare to weight for coordinate)
-weight = 90000
-
 # optimizer
 optimizer = 'nadam'
+
+# floor difference weight
+weight = 150
 
 # seperates floors
 def seperate(set):
@@ -146,7 +147,7 @@ def handle():
     # test = data[:test_size]
     # dev = data[test_size:total]
     # train = data[total:]
-    train, test = train_test_split(data, test_size = test_size)
+    # train, test = train_test_split(data, test_size = test_size)
 
     # extracts labels
     # X_train = train[:,:5]
@@ -154,7 +155,7 @@ def handle():
     # X_dev = dev[:,:5]
     # Y_dev = dev[:,5:]
     # X_test = test[:,:5]
-    X_test, Y_test = multi_pop(test)
+    # X_test, Y_test = multi_pop(test)
 
     # visualizes the locations
     if plotting:
@@ -166,7 +167,7 @@ def handle():
     # X_dev = scaler.transform(X_dev)
     # X_test = scaler.transform(X_test)
 
-    return X_train, Y_train, X_test, Y_test
+    return X_train, Y_train
 
 # transforms pandas data frame to numpy array
 def transform(frame, no):
@@ -176,7 +177,7 @@ def transform(frame, no):
     return array
 
 # builds model
-def build(X_train, Y_train, X_test, Y_test):
+def build(X_train, Y_train, X_test, Y_test, max):
 
     # number of train samples
     # number = np.shape(X[0])[0]
@@ -221,7 +222,7 @@ def build(X_train, Y_train, X_test, Y_test):
     # trains model
     model = Model([input_layer, x_layer, y_layer, floor_layer], [output_0, output_1, output_2])
     #model.compile(loss='mean_squared_error', optimizer=optimizer)
-    loss = K.mean(K.sqrt((K.square(output_0 - x_layer) + K.square(output_1 - y_layer)))) + weight * mse(output_2, floor_layer)
+    loss = K.mean(K.sqrt((K.square(output_0 - x_layer) + K.square(output_1 - y_layer)))) + mse(output_2, floor_layer) * weight
     model.add_loss(loss)
     model.compile(optimizer=optimizer)
     print(model.summary())
@@ -246,13 +247,24 @@ def build(X_train, Y_train, X_test, Y_test):
     print('sample prediction: ' + str(model.predict([np.array([[-69,-77,-63,-65,-47]]), dummy, dummy, dummy])))
 
     # serializes and saves model
-    json = model.to_json()
-    with open('./data/Localization/model.json', 'w') as file:
-        file.write(json)
-    model.save_weights('./data/Localization/weights.h5')
+    if evaluation[0][0] < min:
+        json = model.to_json()
+        with open('./data/Localization/model.json', 'w') as file:
+            file.write(json)
+        model.save_weights('./data/Localization/weights.h5')
+    return distance_loss / length, floor_loss / length
 
 def main():
-    X_train, Y_train, X_test, Y_test = handle()
-    # build(X_train, Y_train, X_test, Y_test)
+    max = 0
+    distances = []
+    floors = []
+    X, Y = handle()
+    kfold = StratifiedKFold(n_splits=10, shuffle=True)
+    for train, test in kfold.split(X, Y):
+        distance, floor = build(X[train], Y[train], X[test], Y[test], max)
+        distances.append(distance)
+        floors.append(floor)
+    print(np.mean(distances))
+    print(np.mean(floors))
 
 main()
